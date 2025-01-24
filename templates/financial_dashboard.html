@@ -1,4 +1,3 @@
-<!-- financial_dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +24,7 @@
         </header>
 
         <!-- Main Content -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Budget vs Expenditure Bar Chart -->
             <div class="p-6 bg-white rounded-lg shadow">
                 <h2 class="text-xl font-semibold mb-4">Budget vs Expenditure</h2>
@@ -39,21 +38,38 @@
             </div>
         </div>
 
-        <!-- Financial Summary Section -->
-        <div class="mt-6 bg-white p-6 rounded-lg shadow">
-            <h2 class="text-xl font-semibold mb-4">Financial Summary</h2>
-            <table class="min-w-full text-sm">
+        <!-- Additional Data Visualizations -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Net Balance Line Chart -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Net Balance Over Time</h2>
+                <canvas id="netBalanceChart"></canvas>
+            </div>
+
+            <!-- Expenditure Breakdown Pie Chart -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Expenditure Breakdown</h2>
+                <canvas id="expenditureBreakdownChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Fundraising Events Table -->
+        <div class="p-6 bg-white rounded-lg shadow mt-6">
+            <h2 class="text-xl font-semibold mb-4">Fundraising Events Performance</h2>
+            <table class="table-auto w-full border-collapse border border-gray-300">
                 <thead>
-                    <tr>
-                        <th class="px-4 py-2 text-left">Year</th>
-                        <th class="px-4 py-2 text-left">Net Balance</th>
+                    <tr class="bg-gray-100 text-left">
+                        <th class="border border-gray-300 px-4 py-2">Event</th>
+                        <th class="border border-gray-300 px-4 py-2">Amount Raised</th>
+                        <th class="border border-gray-300 px-4 py-2">Year</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for summary in summary_data %}
+                    {% for fundraising in fundraising_events %}
                     <tr>
-                        <td class="px-4 py-2">{{ summary.year }}</td>
-                        <td class="px-4 py-2 text-green-500">${{ summary.net_balance }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ fundraising.fundraising_event }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ fundraising.amount_raised | floatformat:2 }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ fundraising.date.year }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -64,10 +80,12 @@
     <!-- Flowbite JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
 
+    <!-- Chart.js Scripts -->
     <script>
         // Budget vs Expenditure Bar Chart
         const budgetLabels = [{% for label in budget_labels %}"{{ label }}",{% endfor %}];
         const budgetData = [{% for value in budget_data %}{{ value }},{% endfor %}];
+        const expenditureData = [{% for expenditure in expenditure_data %}{{ expenditure }},{% endfor %}];
 
         const ctxBudgetExpenditure = document.getElementById('budgetExpenditureChart').getContext('2d');
         new Chart(ctxBudgetExpenditure, {
@@ -84,7 +102,7 @@
                     },
                     {
                         label: 'Total Expenditure',
-                        data: [{% for expenditure in expenditure_data %}{{ expenditure }},{% endfor %}],
+                        data: expenditureData,
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
@@ -102,35 +120,64 @@
         });
 
         // Fundraising vs Expenditure Doughnut Chart
-        const fundraisingLabels = [{% for label in fundraising_labels %}"{{ label }}",{% endfor %}];
         const fundraisingData = [{% for value in fundraising_data %}{{ value }},{% endfor %}];
-        const expenditureData = [{% for expenditure in expenditure_data %}{{ expenditure }},{% endfor %}];
-
         const ctxFundraisingExpenditure = document.getElementById('fundraisingExpenditureChart').getContext('2d');
         new Chart(ctxFundraisingExpenditure, {
             type: 'doughnut',
             data: {
                 labels: ['Fundraising', 'Expenditure'],
                 datasets: [{
-                    data: fundraisingData.concat(expenditureData),
+                    data: [fundraisingData.reduce((a, b) => a + b, 0), expenditureData.reduce((a, b) => a + b, 0)],
                     backgroundColor: ['#4caf50', '#f44336'],
                     hoverBackgroundColor: ['#81c784', '#e57373'],
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Net Balance Line Chart
+        const netBalanceLabels = [{% for summary in summary_data %}"{{ summary.year }}",{% endfor %}];
+        const netBalanceData = [{% for summary in summary_data %}{{ summary.net_balance }},{% endfor %}];
+        const ctxNetBalance = document.getElementById('netBalanceChart').getContext('2d');
+        new Chart(ctxNetBalance, {
+            type: 'line',
+            data: {
+                labels: netBalanceLabels,
+                datasets: [{
+                    label: 'Net Balance',
+                    data: netBalanceData,
+                    borderColor: '#3b82f6',
+                    tension: 0.4,
+                    fill: false
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                return tooltipItem.raw.toLocaleString('en-US', { style: 'currency', currency: 'INR' });
-                            }
-                        }
+                        display: false
                     }
                 }
+            }
+        });
+
+        // Expenditure Breakdown Pie Chart
+        const expenditureCategories = [{% for label in expenditure_labels %}"{{ label }}",{% endfor %}];
+        const ctxExpenditureBreakdown = document.getElementById('expenditureBreakdownChart').getContext('2d');
+        new Chart(ctxExpenditureBreakdown, {
+            type: 'pie',
+            data: {
+                labels: expenditureCategories,
+                datasets: [{
+                    data: expenditureData,
+                    backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#4bc0c0'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true
             }
         });
     </script>

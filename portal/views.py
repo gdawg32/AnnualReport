@@ -82,7 +82,7 @@ def dashboard(request):
 
     # Create a textual report based on the data
     prompt = f"""
-    Generate a paragraph containing a detailed report for the academic records of students.
+    Generate 4 paragraph containing a detailed report for the academic records of students.
     GPA distribution: {', '.join(map(str, gpa_data))}
     Students by Category: {', '.join(f'{category["category"]}: {category["count"]}' for category in category_counts)}
     GPA by Semester: {', '.join(map(str, gpa_by_semester))}
