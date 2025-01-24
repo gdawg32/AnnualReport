@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage HoDs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Manage HoDs</h1>
+
+    <!-- Display Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="p-4 mb-4 text-sm text-white {{ message.tags }} bg-blue-600 rounded">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Add HoD Form -->
+    <div class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-lg font-bold mb-4">Add New HoD</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+          <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border rounded-md">
+        </div>
+        <div class="mb-4">
+          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 border rounded-md">
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+          <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border rounded-md">
+        </div>
+        <div class="mb-4">
+          <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
+          <select id="department" name="department" required class="mt-1 block w-full px-3 py-2 border rounded-md">
+            <option value="">Select a department</option>
+            {% for department in departments %}
+              <option value="{{ department.id }}">{{ department.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Add HoD</button>
+      </form>
+    </div>
+
+    <!-- Existing HoDs -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-bold mb-4">Existing HoDs</h2>
+      <ul class="list-disc pl-5">
+        {% for hod in hods %}
+          <li class="mb-2">{{ hod.user.username }} - {{ hod.department.name }}</li>
+        {% empty %}
+          <p>No HoDs found.</p>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

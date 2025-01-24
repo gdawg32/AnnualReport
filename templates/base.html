@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Unireports{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom Styles */
+    .bg-custom {
+      background-image: url('https://www.w3schools.com/w3images/forestbridge.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+
+<body class="bg-gray-100 font-sans h-screen flex flex-col justify-between">
+
+  <!-- Navbar -->
+  <header class="bg-blue-900 text-white py-6">
+    <div class="container mx-auto flex justify-between items-center">
+      <!-- Logo/Brand Name -->
+      <div class="text-2xl font-semibold">
+        <h1>Unireports</h1>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex space-x-6">
+        <ul class="flex space-x-6">
+          <li><a href="#academic-performance" class="hover:text-blue-300">Academic Performance</a></li>
+          <li><a href="#research-outputs" class="hover:text-blue-300">Research Outputs</a></li>
+          <li><a href="#financial-statistics" class="hover:text-blue-300">Financial Statistics</a></li>
+          <li><a href="#achievements" class="hover:text-blue-300">Achievements</a></li>
+          <li><a href="#contact" class="hover:text-blue-300">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Login Button -->
+      <a href="login.html" class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-300 ease-in-out hover:scale-105">
+        Login
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="bg-custom flex-grow flex items-center justify-center bg-no-repeat bg-cover">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white py-6 text-center mt-auto">
+    <div class="container mx-auto">
+      <p>&copy; 2025 Unireports. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

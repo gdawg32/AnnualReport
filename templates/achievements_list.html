@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Achievements{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+    <h1 class="text-4xl font-bold mb-8">Achievements</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for achievement in achievements %}
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            {% if achievement.image %}
+            <img src="{{ achievement.image.url }}" alt="{{ achievement.title }}" class="w-full h-48 object-cover rounded-md mb-4">
+            {% endif %}
+            <h2 class="text-2xl font-bold mb-2">{{ achievement.title }}</h2>
+            <p class="text-sm text-gray-500 mb-2">
+                <strong>Type:</strong> {{ achievement.achievement_type }} <br>
+                <strong>Awarded To:</strong> {{ achievement.awarded_to }} <br>
+                <strong>Date:</strong> {{ achievement.date_awarded }}
+            </p>
+            <p class="text-gray-700">{{ achievement.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

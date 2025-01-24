@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Achievement{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+    <h1 class="text-4xl font-bold mb-8">Add Achievement</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded-lg shadow-lg">
+        {% csrf_token %}
+        
+        <div class="mb-4">
+            <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+            <input type="text" name="title" id="title" required
+                   class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <textarea name="description" id="description" rows="4" required
+                      class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="achievement_type" class="block text-sm font-medium text-gray-700">Type</label>
+            <select name="achievement_type" id="achievement_type" required
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                <option value="Student">Student</option>
+                <option value="Faculty">Faculty</option>
+                <option value="Department">Department</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="awarded_to" class="block text-sm font-medium text-gray-700">Awarded To</label>
+            <input type="text" name="awarded_to" id="awarded_to" required
+                   class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="mb-4">
+            <label for="date_awarded" class="block text-sm font-medium text-gray-700">Date Awarded</label>
+            <input type="date" name="date_awarded" id="date_awarded" required
+                   class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="mb-4">
+            <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
+            <input type="file" name="image" id="image"
+                   class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+        </div>
+
+        <button type="submit"
+                class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Submit
+        </button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Departments</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Manage Departments</h1>
+
+    <!-- Display Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="p-4 mb-4 text-sm text-white {{ message.tags }} bg-blue-600 rounded">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- Department Form -->
+    <div class="bg-white p-4 rounded shadow mb-6">
+      <h2 class="text-lg font-bold mb-4">Add New Department</h2>
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="name" class="block text-sm font-medium text-gray-700">Department Name</label>
+          <input type="text" id="name" name="name" required 
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+        </div>
+        <button type="submit" 
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Add Department
+        </button>
+      </form>
+    </div>
+
+    <!-- Department List -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-lg font-bold mb-4">Existing Departments</h2>
+      <ul class="list-disc pl-5">
+        {% for department in departments %}
+          <li class="mb-2">{{ department.name }}</li>
+        {% empty %}
+          <p>No departments found.</p>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

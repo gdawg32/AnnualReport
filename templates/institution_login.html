@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institution Login - Unireports</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom Styles */
+    .bg-custom {
+      background-image: url('https://www.w3schools.com/w3images/forestbridge.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 font-sans h-screen flex flex-col justify-between">
+
+  <!-- Navbar -->
+  <header class="bg-blue-900 text-white py-6">
+    <div class="container mx-auto flex justify-between items-center">
+      <!-- Logo/Brand Name -->
+      <div class="text-2xl font-semibold">
+        <h1>Unireports</h1>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex space-x-6">
+        <ul class="flex space-x-6">
+          <li><a href="#academic-performance" class="hover:text-blue-300">Academic Performance</a></li>
+          <li><a href="#research-outputs" class="hover:text-blue-300">Research Outputs</a></li>
+          <li><a href="#financial-statistics" class="hover:text-blue-300">Financial Statistics</a></li>
+          <li><a href="#achievements" class="hover:text-blue-300">Achievements</a></li>
+          <li><a href="#contact" class="hover:text-blue-300">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Login Button -->
+      <a href="login.html" class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-6 rounded-lg font-semibold transition-all duration-300 ease-in-out hover:scale-105">
+        Login
+      </a>
+    </div>
+  </header>
+
+  <!-- Institution Login Container -->
+  <div class="bg-custom flex-grow flex items-center justify-center bg-no-repeat bg-cover">
+    <!-- Login Form -->
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+
+      <h2 class="text-3xl font-bold text-center text-blue-900 mb-6">Institution Login</h2>
+
+      <!-- Error Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <p class="text-red-500 text-center mb-4">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Login Form -->
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- Username Input -->
+        <div class="mb-4">
+          <label for="username" class="block text-sm font-semibold text-gray-700">Username</label>
+          <input type="text" id="username" name="username" class="w-full px-4 py-2 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your username" required>
+        </div>
+
+        <!-- Password Input -->
+        <div class="mb-6">
+          <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
+          <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your password" required>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300 ease-in-out transform hover:scale-105">
+          Login
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white py-6 text-center mt-auto">
+    <div class="container mx-auto">
+      <p>&copy; 2025 Unireports. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

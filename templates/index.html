@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to Unireports{% endblock %}
+
+{% block head %}
+<!-- AOS (Animate On Scroll) for animations -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-custom text-white">
+  <!-- Hero Section -->
+  <section class="py-20 text-center" data-aos="fade-up">
+    <h1 class="text-6xl font-bold mb-4">Welcome to <span class="text-blue-400">Unireports</span></h1>
+    <p class="text-lg mb-8">Streamline your institution's performance, research, finances, and achievements all in one place.</p>
+    <a href="#features" class="bg-blue-600 hover:bg-blue-500 text-white py-3 px-8 rounded-lg text-lg font-semibold transition-all duration-300">
+      Explore Features
+    </a>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 bg-gray-100 text-gray-800">
+    <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">Features</h2>
+    <div class="grid md:grid-cols-3 gap-8 px-8">
+      <!-- Feature 1 -->
+      <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-right">
+        <h3 class="text-2xl font-bold text-blue-900 mb-4">Academic Performance</h3>
+        <p class="text-gray-600">Monitor and analyze student achievements, faculty contributions, and curriculum efficiency.</p>
+      </div>
+      <!-- Feature 2 -->
+      <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-up">
+        <h3 class="text-2xl font-bold text-blue-900 mb-4">Research Outputs</h3>
+        <p class="text-gray-600">Track publications, projects, and collaborations to ensure research excellence.</p>
+      </div>
+      <!-- Feature 3 -->
+      <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-left">
+        <h3 class="text-2xl font-bold text-blue-900 mb-4">Financial Statistics</h3>
+        <p class="text-gray-600">Analyze budgets, expenses, and fundraising activities for financial health.</p>
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- Call to Action -->
+  <section class="py-20 bg-blue-900 text-white text-center">
+    <h2 class="text-4xl font-bold mb-4" data-aos="fade-up">Ready to Transform Your Institution?</h2>
+    <p class="text-lg mb-8" data-aos="fade-up">Get started with Unireports and revolutionize the way you manage your institution's data.</p>
+    <a href="register.html" class="bg-blue-600 hover:bg-blue-500 text-white py-3 px-8 rounded-lg text-lg font-semibold transition-all duration-300" data-aos="zoom-in">
+      Get Started
+    </a>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-20 bg-gray-100 text-gray-800">
+    <div class="container mx-auto">
+      <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">What Our Clients Say</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-right">
+          <p class="text-gray-600 italic mb-4">"Unireports made it so easy for us to manage our institution's data. Highly recommend!"</p>
+          <h4 class="text-blue-900 font-bold">- Gauresh P A, Principal</h4>
+        </div>
+        <!-- Testimonial 2 -->
+        <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-up">
+          <p class="text-gray-600 italic mb-4">"The financial analytics tools are amazing. We've saved so much time and effort."</p>
+          <h4 class="text-blue-900 font-bold">- Safeer S, CFO</h4>
+        </div>
+        <!-- Testimonial 3 -->
+        <div class="bg-white p-8 rounded-lg shadow-lg" data-aos="fade-left">
+          <p class="text-gray-600 italic mb-4">"The research tracking feature is a game changer. Our teams love it!"</p>
+          <h4 class="text-blue-900 font-bold">- Abhisek S, Research Head</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Call to Action -->
+  <section class="py-12 bg-blue-900 text-white text-center">
+    <h3 class="text-2xl font-bold mb-4" data-aos="fade-up">Join hundreds of institutions using Unireports</h3>
+    <p class="text-lg mb-8" data-aos="fade-up">Login.</p>
+    <a href="{% url "institution_login" %}" class="bg-blue-600 hover:bg-blue-500 text-white py-3 px-8 rounded-lg text-lg font-semibold transition-all duration-300" data-aos="zoom-in">
+      Login Now
+    </a>
+  </section>
+</div>
+{% endblock %}

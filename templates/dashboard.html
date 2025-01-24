@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Performance Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Flowbite CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet" />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div id="dashboard" class="min-h-screen p-6">
+        <!-- Header -->
+        <header class="mb-6 text-center">
+            <h1 class="text-3xl font-bold text-gray-800">Academic Performance Dashboard</h1>
+            <button id="downloadPdf" class="px-4 py-2 bg-blue-600 text-white rounded-lg mt-4 hover:bg-blue-700">
+                Download PDF
+            </button>
+        </header>
+
+
+        
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Grade Distribution Chart -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Grade Distribution</h2>
+                <canvas id="gradeChart"></canvas>
+            </div>
+
+            <!-- Attendance Rate Chart -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Attendance Rate</h2>
+                <canvas id="attendanceRateChart"></canvas>
+            </div>
+
+            <!-- Category Distribution Pie Chart -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Student Category Distribution</h2>
+                <canvas id="categoryChart"></canvas>
+            </div>
+
+            <!-- GPA Distribution by Semester Chart -->
+            <div class="p-6 bg-white rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">GPA Distribution by Semester</h2>
+                <canvas id="gpaBySemesterChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flowbite JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+
+    <script>
+        // Chart configurations (already discussed in your code)
+
+        // Grade Distribution Chart
+        const labels = [{% for label in gpa_chart_data.labels %}"{{ label }}",{% endfor %}];
+        const data = [{% for value in gpa_chart_data.data %}{{ value|default:0 }},{% endfor %}];
+
+        const ctxGPA = document.getElementById('gradeChart').getContext('2d');
+        new Chart(ctxGPA, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'GPA of Students',
+                    data: data,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(231, 233, 237, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(231, 233, 237, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Attendance Rate Chart
+        const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May"];
+        const attendanceData = [90, 85, 80, 95, 88];
+
+        const ctxAttendanceRate = document.getElementById('attendanceRateChart').getContext('2d');
+        new Chart(ctxAttendanceRate, {
+            type: 'line',
+            data: {
+                labels: monthLabels,
+                datasets: [{
+                    label: 'Attendance Rate',
+                    data: attendanceData,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Category Distribution Pie Chart
+        const categoryLabels = [{% for category in category_chart_data.labels %}"{{ category }}",{% endfor %}];
+        const categoryData = [{% for count in category_chart_data.data %}{{ count }},{% endfor %}];
+
+        const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctxCategory, {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryData,
+                    backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33FF'],
+                }]
+            }
+        });
+
+        // GPA Distribution by Semester Chart
+        const semesters = {{ semesters|safe }};
+        const gpaData = {{ gpa_by_semester|safe }};
+
+        const ctxSemester = document.getElementById('gpaBySemesterChart').getContext('2d');
+        new Chart(ctxSemester, {
+            type: 'line',
+            data: {
+                labels: semesters,
+                datasets: [{
+                    label: 'Average GPA per Semester',
+                    data: gpaData,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                }
+            }
+        });
+
+        // PDF Download Functionality
+        document.getElementById('downloadPdf').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+
+            const charts = [
+                { id: 'gradeChart', title: 'Grade Distribution' },
+                { id: 'attendanceRateChart', title: 'Attendance Rate' },
+                { id: 'categoryChart', title: 'Student Category Distribution' },
+                { id: 'gpaBySemesterChart', title: 'GPA Distribution by Semester' }
+            ];
+
+            let currentPage = 1;
+
+            charts.forEach((chart, index) => {
+                const canvas = document.getElementById(chart.id);
+                const chartTitle = chart.title;
+
+                pdf.setFontSize(16);
+                pdf.text(chartTitle, 10, 20);
+
+                const canvasImage = canvas.toDataURL('image/png');
+                const imgWidth = 190; // Width for the PDF
+                const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+
+                pdf.addImage(canvasImage, 'PNG', 10, 30, imgWidth, imgHeight);
+
+                // Add a new page for the next chart if not the last one
+                if (index !== charts.length - 1) {
+                    pdf.addPage();
+                    currentPage += 1;
+                }
+            });
+
+            pdf.save('Academic_Performance_Dashboard.pdf');
+        });
+    </script>
+</body>
+
+</html>
