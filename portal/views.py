@@ -11,8 +11,9 @@ import json
 from django.db.models import Avg, Count
 from collections import defaultdict
 from decimal import Decimal
+import google.generativeai as genai
 
-
+genai.configure(api_key="AIzaSyCj5c6PRO1cKvBmRJ2jq-vwaKw0yo9CA0g")
 
 # Create your views here.
 def index(request):
@@ -79,17 +80,34 @@ def dashboard(request):
     months = ["Jan", "Feb", "Mar", "Apr", "May"]
     attendance_rate = [90, 85, 80, 95, 88]
 
+    # Create a textual report based on the data
+    prompt = f"""
+    Generate a paragraph containing a detailed report for the academic records of students.
+    GPA distribution: {', '.join(map(str, gpa_data))}
+    Students by Category: {', '.join(f'{category["category"]}: {category["count"]}' for category in category_counts)}
+    GPA by Semester: {', '.join(map(str, gpa_by_semester))}
+    Attendance Rate for each month: {', '.join(map(str, attendance_rate))}
+    """
+
+    # Use the Gemini AI model to generate a report
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    response = model.generate_content(prompt)
+
+    # The generated report text
+    generated_report = response.text
 
     context = {
         'gpa_chart_data': gpa_chart_data,
         'category_chart_data': category_chart_data,
         'semesters': json.dumps(semesters),
         'gpa_by_semester': json.dumps(gpa_by_semester),
-        'months': (months),
-        'attendance_rate': (attendance_rate)
+        'months': months,
+        'attendance_rate': attendance_rate,
+        'generated_report': generated_report  
     }
 
     return render(request, 'dashboard.html', context)
+
 
 def financial_dashboard(request):
     # Fetch budgets, expenditures, and fundraising data
