@@ -11,9 +11,7 @@ import json
 from django.db.models import Avg, Count
 from collections import defaultdict
 from decimal import Decimal
-import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyCj5c6PRO1cKvBmRJ2jq-vwaKw0yo9CA0g")
 
 # Create your views here.
 def index(request):
@@ -89,13 +87,6 @@ def dashboard(request):
     Attendance Rate for each month: {', '.join(map(str, attendance_rate))}
     """
 
-    # Use the Gemini AI model to generate a report
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    response = model.generate_content(prompt)
-
-    # The generated report text
-    generated_report = response.text
-
     context = {
         'gpa_chart_data': gpa_chart_data,
         'category_chart_data': category_chart_data,
@@ -103,7 +94,6 @@ def dashboard(request):
         'gpa_by_semester': json.dumps(gpa_by_semester),
         'months': months,
         'attendance_rate': attendance_rate,
-        'generated_report': generated_report  
     }
 
     return render(request, 'dashboard.html', context)
